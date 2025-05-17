@@ -1,17 +1,12 @@
 const fs = require("fs");
+const bencodeModule = await import("bencode");
+const bencode = bencodeModule.default;
+const tracker = require("./tracker");
 
-async function decodeTorrent() {
-  try {
-    const bencodeModule = await import("bencode");
-    const bencode = bencodeModule.default;
+const torrentFile = bencode.decode(
+  fs.readFileSync("manjaro-xfce-24.2.1-241216-linux612.iso.torrent")
+);
 
-    const torrentFile = bencode.decode(
-      fs.readFileSync("manjaro-xfce-24.2.1-241216-linux612.iso.torrent"),
-    );
-    console.log(torrentFile.announce.toString("utf8"));
-  } catch (error) {
-    console.error("error:", error);
-  }
-}
-
-decodeTorrent();
+tracker.getPeers(torrent, (peers) => {
+  console.log("them peers: ", peers);
+});
