@@ -39,3 +39,11 @@ function buildConnReq() {
   // transaction id
   crypto.randomBytes(4).copy(buf, 12);
 }
+
+function parseConnResp(resp) {
+  return {
+    action: resp.readUInt32BE(0),
+    transactionId: resp.readUInt32BE(4),
+    connectionId: resp.slice(8),
+  };
+}
