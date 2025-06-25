@@ -8,9 +8,21 @@ module.exports.getPeers = (torrent, callback) => {
 
   udpSend(socket, buildConnReq(), url);
 
-  socket.on("message", (msg) => {
-    if (msg === "connect") {
-    } else if (msg === "announce") {
+  socket.on("message", (response) => {
+    if (respType(response) === "connect") {
+      // 2. receive and parse connect response
+      const connResp = parseConnResp(response);
+
+      // 3. send announce request
+      const announceReq = buildAnnounceReq(connResp.connectionId);
+
+      udpSend(socket, announceReq, url);
+    } else if (respType(response) === "announce") {
+      // 4. parse announce response
+      // todo
+
+      // 5. pass peers to callback
+      callback(announceResp.peers);
     }
   });
 };
