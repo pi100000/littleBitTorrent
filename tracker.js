@@ -1,6 +1,7 @@
 const dgram = require("dgram");
 const url = require("url").parse;
 const util = require("./util");
+const torrentParser = require("./torrent-parser");
 
 module.exports.getPeers = (torrent, callback) => {
   const socket = dgram.createSocket("udp4");
@@ -74,7 +75,7 @@ function buildAnnounceReq(connId, torrent, port = 6881) {
   crypto.randomBytes(4).copy(buf, 12);
 
   // info hash
-  // todo
+  torrentParser.infoHash(torrent).copy(buf, 16);
 
   // peerId
   util.genId().copy(buf, 36);
@@ -83,7 +84,7 @@ function buildAnnounceReq(connId, torrent, port = 6881) {
   Buffer.alloc(8).copy(buf, 56);
 
   // left
-  // todo
+  torrentParser.size(torrent).copy(buf, 64);
 
   // uploaded
   Buffer.alloc(8).copy(buf, 72);
